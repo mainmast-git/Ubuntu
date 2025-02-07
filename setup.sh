@@ -28,7 +28,7 @@ sudo apt install -y \
 # Setup qt5ct theme for KDE applications
 echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
 qt5ct # For user
-sudo qtct # For super user 
+sudo qt5ct # For super user 
 echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
 echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
 source ~/.bashrc
@@ -57,11 +57,6 @@ flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
 echo "Configuring GNOME theme..."
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
-# Remove apps I don't need
-sudo snap remove thunderbird firefox
-sudo apt remove --purge libreoffice* -y
-sudo apt autoremove -y
-
 # Pin favorite apps to the Ubuntu sidebar
 gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'google-chrome.desktop']/")"
 gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'com.spotify.Client.desktop']/")"
@@ -74,6 +69,11 @@ gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell fav
 gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'thunderbird_thunderbird.desktop'//" | sed "s/'thunderbird_thunderbird.desktop', //")"
 gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'yelp.desktop'//" | sed "s/'yelp.desktop', //")"
 gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'org.gnome.Rhythmbox3.desktop'//" | sed "s/'org.gnome.Rhythmbox3.desktop', //")"
+
+# Remove apps I don't need
+sudo snap remove thunderbird firefox
+sudo apt remove --purge libreoffice* -y
+sudo apt autoremove -y
 
 # Clone your Ubuntu repo
 echo "Cloning configuration repository..."
