@@ -23,15 +23,12 @@ sudo apt install -y \
     bridge-utils virt-manager flatpak timeshift neovim qdirstat \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
-    make gawk trash-cli btop
+    make gawk trash-cli btop fzf
 
 # Setup qt5ct theme for KDE applications
 echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
 qt5ct # For user
 sudo qt5ct # For super user 
-echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
-echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
-source ~/.bashrc
 
 # Enable i386 architecture for GNS3 IOU support
 echo "Adding i386 architecture and updating packages..."
@@ -84,9 +81,11 @@ echo "Deploying user configurations..."
 mv -f /tmp/Ubuntu/home/.config/monitors.xml $HOME/.config/
 
 # Add custom configuration to .bashrc
-git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git /tmp/
-chmod +x /tmp/mybash/setup.sh
-/tmp/mybash/setup.sh
+git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
+chmod +x ~/mybash/setup.sh
+~/mybash/setup.sh
+echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
+echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
 
 # Reload .bashrc
 source ~/.bashrc
