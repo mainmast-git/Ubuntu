@@ -29,6 +29,9 @@ sudo apt install -y \
 echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
 qt5ct # For user
 sudo qtct # For super user 
+echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
+echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
+source ~/.bashrc
 
 # Enable i386 architecture for GNS3 IOU support
 echo "Adding i386 architecture and updating packages..."
