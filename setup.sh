@@ -94,6 +94,7 @@ source ~/.bashrc
 # Clean up
 echo "Removing cloned repository..."
 rm -rf /tmp/Ubuntu
+rm -rf ~/mybash
 
 echo "Cleaning up downloaded .deb files..."
 rm /tmp/google-chrome.deb /tmp/teamviewer.deb 
