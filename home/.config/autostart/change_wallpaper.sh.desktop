@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/local/bin/change_wallpaper.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[sv_SE]=Change Wallpaper
+Name=Change Wallpaper
+Comment[sv_SE]=Change wallpaper at startup
+Comment=Change wallpaper at startup
