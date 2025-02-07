@@ -80,6 +80,7 @@ git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers
 # Copy configuration files
 echo "Deploying user configurations..."
 mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
+mv -f /tmp/Ubuntu/home/.vimrc $HOME/.config/
 
 # Add custom configuration to .bashrc
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
@@ -90,6 +91,12 @@ make -C ble.sh install PREFIX=~/.local
 echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
 echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
 echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
+
+# Set catppuccin mocha theme
+## gnome-terminal
+curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/install.py | python3 -
+gsettings set org.gnome.Terminal.ProfilesList default '95894cfd-82f7-430d-af6e-84d168bc34f5'
+gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
 
 # Reload .bashrc
 source ~/.bashrc
