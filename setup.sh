@@ -85,6 +85,9 @@ mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
 chmod +x ~/mybash/setup.sh
 ~/mybash/setup.sh
+git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
+make -C ble.sh install PREFIX=~/.local
+echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
 echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
 echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
 
