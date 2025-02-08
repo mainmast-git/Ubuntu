@@ -106,6 +106,7 @@ alias clean='sudo apt autoremove -y && sudo apt autoclean -y'
 alias packages='apt list --installed'
 alias ping='ping -c 4'
 alias ip='ip -c'
+alias vi='\vi'
 EOF
 
 # Set catppuccin mocha theme
