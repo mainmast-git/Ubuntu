@@ -97,7 +97,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 alias sedit='sudo nvim'
 alias clear='clear; fastfetch'
 alias cls='clear'
-bind -x '"\C-l": "clear; echo -e "\n""'
+bind -x '"\C-l": clear'
 alias update='sudo apt update -y; sudo apt upgrade -y; flatpak update -y; sudo snap refresh'
 alias install='sudo apt install -y'
 alias search='apt search'
