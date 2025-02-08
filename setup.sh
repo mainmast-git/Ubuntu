@@ -113,7 +113,6 @@ alias -- -="cd -"
 # Alias's for multiple directory listing commands
 alias la='lsd -Alh'                # show hidden files
 alias ls='lsd -aFh --color=always' # add colors and file type extension
-s
 alias lx='lsd -lXBh'               # sort by extension
 alias lk='lsd -lSrh'               # sort by size
 alias lc='lsd -ltcrh'              # sort by change time
