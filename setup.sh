@@ -26,6 +26,12 @@ sudo apt install -y \
     make gawk trash-cli btop fzf bash-completion whois bat tree \
     ripgrep gnome-tweaks
 
+# Add Paprius PPA
+sudo add-apt-repository ppa:papirus/papirus
+sudo apt-get update -y
+sudo apt-get install -y papirus-icon-theme  # Papirus, Papirus-Dark, and Papirus-Light
+sudo apt-get install -y epapirus-icon-theme # ePapirus, and ePapirus-Dark for elementaryOS only
+
 # Setup qt5ct theme for KDE applications
 echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
 qt5ct # For user
