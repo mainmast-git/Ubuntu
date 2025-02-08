@@ -149,6 +149,11 @@ sudo cp -r src/* /usr/share/icons/Papirus
 curl -LO https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders && chmod +x ./papirus-folders
 ./papirus-folders -C cat-mocha-lavender --theme Papirus-Dark
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+## GTK 3/4 theming
+cd $HOME
+curl -LsSO "https://raw.githubusercontent.com/catppuccin/gtk/v1.0.3/install.py"
+python3 install.py mocha lavender
+gsettings set org.gnome.desktop.interface gtk-theme 'catppuccin-mocha-lavender-standard+default'
 
 # Reload .bashrc
 source ~/.bashrc
