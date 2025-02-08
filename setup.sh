@@ -89,8 +89,22 @@ chmod +x ~/mybash/setup.sh
 git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
 make -C ble.sh install PREFIX=~/.local
 echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
-echo "export QT_QPA_PLATFORMTHEME=qt5ct" >> ~/.bashrc
-echo "alias qdirstat='nohup sudo -E qdirstat'" >> ~/.bashrc
+cat << EOF >> ~/.bashrc
+alias qdirstat='nohup sudo -E qdirstat'
+export QT_QPA_PLATFORMTHEME=qt5ct
+alias sedit='sudo nvim'
+alias clear='clear; fastfetch'
+alias cls='clear'
+bind -x '"\C-l": "clear; echo -e "\n""'
+alias update='sudo apt update -y; sudo apt upgrade -y; flatpak update -y; sudo snap refresh'
+alias install='sudo apt install -y'
+alias search='apt search'
+alias uninstall='sudo apt remove -y'
+alias clean='sudo apt autoremove -y && sudo apt autoclean -y'
+alias packages='apt list --installed'
+alias ping='ping -c 4'
+alias ip='ip -c'
+EOF
 
 # Set catppuccin mocha theme
 ## gnome-terminal
