@@ -154,6 +154,7 @@ cd $HOME
 curl -LsSO "https://raw.githubusercontent.com/catppuccin/gtk/v1.0.3/install.py"
 python3 install.py mocha lavender
 gsettings set org.gnome.desktop.interface gtk-theme 'catppuccin-mocha-lavender-standard+default'
+gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-sage'
 
 # Reload .bashrc
 source ~/.bashrc
