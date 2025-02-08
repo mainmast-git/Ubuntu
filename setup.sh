@@ -149,7 +149,7 @@ wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/ma
 wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
 wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
 wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
-bat cache --build
+batcat cache --build
 ## Papirus icons
 git clone https://github.com/catppuccin/papirus-folders.git
 cd papirus-folders
