@@ -48,7 +48,7 @@ echo "Setting up Flatpak..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo "Installing Flatpak apps..."
-flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client
+flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
 
 # Set Dark Mode in GNOME
@@ -94,6 +94,7 @@ echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
 cat << EOF >> ~/.bashrc
 alias qdirstat='nohup sudo -E qdirstat'
 export QT_QPA_PLATFORMTHEME=qt5ct
+alias edit='nvim'
 alias sedit='sudo nvim'
 alias clear='clear; fastfetch'
 alias cls='clear'
@@ -108,6 +109,7 @@ alias ping='ping -c 4'
 alias ip='ip -c'
 alias vi='\vi'
 alias ?='tldr'
+alias explain='tldr'
 alias ~='cd $HOME'
 alias -- -="cd -"
 # Alias's for multiple directory listing commands
