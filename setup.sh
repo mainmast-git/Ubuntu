@@ -80,7 +80,7 @@ git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers
 # Copy configuration files
 echo "Deploying user configurations..."
 mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
-mv -f /tmp/Ubuntu/home/.vimrc $HOME/.config/
+mv -f /tmp/Ubuntu/home/.vimrc $HOME/
 
 # Add custom configuration to .bashrc
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
