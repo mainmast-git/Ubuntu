@@ -107,6 +107,7 @@ alias packages='apt list --installed'
 alias ping='ping -c 4'
 alias ip='ip -c'
 alias vi='\vi'
+alias ?='tldr'
 EOF
 
 # Set catppuccin mocha theme
