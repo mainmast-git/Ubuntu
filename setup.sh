@@ -77,6 +77,7 @@ sudo apt autoremove -y
 echo "Cloning configuration repository..."
 git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu
 git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers
+mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/
 
 # Copy configuration files
 echo "Deploying user configurations..."
