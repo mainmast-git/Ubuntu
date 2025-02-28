@@ -24,7 +24,7 @@ sudo apt install -y \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
     make gawk trash-cli btop fzf bash-completion whois bat tree \
-    ripgrep gnome-tweaks
+    ripgrep gnome-tweaks plocate
 
 # Add Paprius PPA
 sudo add-apt-repository ppa:papirus/papirus
