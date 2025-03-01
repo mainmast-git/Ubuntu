@@ -157,6 +157,11 @@ curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/insta
 gsettings set org.gnome.Terminal.ProfilesList default '95894cfd-82f7-430d-af6e-84d168bc34f5'
 gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
 
+# Sätter upp qt5ct tema för KDE applikationer
+echo "Sätter upp tema (Fusion + GTK3 + darker) för KDE..."
+qt5ct # För användare
+sudo qt5ct # För super användare
+
 # bat
 mkdir -p "$(bat --config-dir)/themes" || error_exit "Kunde inte skapa bat-themes-mapp"
 wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme || echo "Varning: Kunde inte ladda ner bat-tema"
