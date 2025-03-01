@@ -23,7 +23,7 @@ sudo apt install -y \
     bridge-utils virt-manager flatpak timeshift neovim qdirstat \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
-    make gawk trash-cli btop fzf bash-completion whois bat tree \
+    make gawk trash-cli fzf bash-completion whois bat tree \
     ripgrep gnome-tweaks plocate
 
 # Add Paprius PPA
@@ -54,7 +54,7 @@ echo "Setting up Flatpak..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo "Installing Flatpak apps..."
-flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop
+flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop io.missioncenter.MissionCenter
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
 
 # Set Dark Mode in GNOME
