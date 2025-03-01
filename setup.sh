@@ -1,109 +1,115 @@
 #!/bin/bash
 
-echo "Starting Ubuntu Post-Installation Setup..."
+# Kontrollera om skriptet körs som root (för att undvika problem med sudo i vissa kommandon)
+if [[ $EUID -eq 0 ]]; then
+    echo "Fel: Detta skript ska inte köras som root. Kör det som vanlig användare istället."
+    exit 1
+fi
 
-# Update & Upgrade System
-echo "Updating and upgrading the system..."
-sudo apt update -y; sudo apt upgrade -y
+echo "Startar Ubuntu Post-Installation Setup..."
 
-# Add GNS3 PPA
-echo "Adding GNS3 PPA..."
-sudo add-apt-repository -y ppa:gns3/ppa
-sudo apt update -y
+# Funktion för att visa fel och avsluta
+error_exit() {
+    echo "Fel: $1"
+    exit 1
+}
 
-# Add fastfetch PPA needed for CTT "mybash"
-echo "Adding fastfetch PPA..."
-sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
-sudo apt update -y
+# Funktion för att fråga användaren om bekräftelse
+confirm() {
+    read -p "$1 (y/n): " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]]
+}
 
-# Install APT Packages
-echo "Installing required packages..."
+### Uppdatera systemet och lägg till PPA:er ###
+echo "Uppdaterar systemet och lägger till PPA:er..."
+
+# Samla alla PPA:er och kör apt update en gång efteråt för att undvika redundans
+sudo add-apt-repository -y ppa:gns3/ppa || error_exit "Kunde inte lägga till GNS3 PPA"
+sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch || error_exit "Kunde inte lägga till fastfetch PPA"
+sudo add-apt-repository -y ppa:papirus/papirus || error_exit "Kunde inte lägga till Papirus PPA"
+sudo apt update -y || error_exit "Kunde inte uppdatera paketlistor"
+sudo apt upgrade -y || error_exit "Kunde inte uppgradera systemet"
+
+### Installera APT-paket ###
+echo "Installerar nödvändiga paket..."
 sudo apt install -y \
     vim curl git qemu-kvm libvirt-daemon-system libvirt-clients \
     bridge-utils virt-manager flatpak timeshift neovim qdirstat \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
     make gawk trash-cli fzf bash-completion whois bat tree \
-    ripgrep gnome-tweaks plocate fail2ban
+    ripgrep gnome-tweaks plocate fail2ban \
+    papirus-icon-theme epapirus-icon-theme || error_exit "Misslyckades med att installera paket"
 
-# Add Paprius PPA
-sudo add-apt-repository ppa:papirus/papirus
-sudo apt-get update -y
-sudo apt-get install -y papirus-icon-theme  # Papirus, Papirus-Dark, and Papirus-Light
-sudo apt-get install -y epapirus-icon-theme # ePapirus, and ePapirus-Dark for elementaryOS only
+### Aktivera i386-arkitektur för GNS3 IOU ###
+echo "Lägger till i386-arkitektur för GNS3 IOU-stöd..."
+sudo dpkg --add-architecture i386 || error_exit "Kunde inte lägga till i386-arkitektur"
+sudo apt update -y || error_exit "Kunde inte uppdatera efter i386-aktivering"
+sudo apt install -y gns3-iou || error_exit "Kunde inte installera gns3-iou"
 
-# Setup qt5ct theme for KDE applications
-echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
-qt5ct # For user
-sudo qt5ct # For super user 
+### Installera .deb-paket ###
+echo "Laddar ner och installerar Google Chrome & TeamViewer..."
+wget -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb || error_exit "Kunde inte ladda ner Google Chrome"
+wget -O /tmp/teamviewer.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb || error_exit "Kunde inte ladda ner TeamViewer"
+sudo dpkg -i /tmp/google-chrome.deb /tmp/teamviewer.deb || sudo apt install -f -y || error_exit "Kunde inte installera .deb-paket"
 
-# Enable i386 architecture for GNS3 IOU support
-echo "Adding i386 architecture and updating packages..."
-sudo dpkg --add-architecture i386
-sudo apt update -y
-sudo apt install -y gns3-iou
+### Konfigurera Flatpak och installera appar ###
+echo "Ställer in Flatpak och installerar appar..."
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || error_exit "Kunde inte lägga till Flathub"
+for app in com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop io.missioncenter.MissionCenter; do
+    flatpak install -y flathub "$app" || echo "Varning: Kunde inte installera $app"
+done
+flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref || echo "Varning: Kunde inte installera Vinegar"
 
-# Install .deb Packages
-echo "Downloading and installing Google Chrome & TeamViewer..."
-wget -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-wget -O /tmp/teamviewer.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-sudo dpkg -i /tmp/google-chrome.deb /tmp/teamviewer.deb || sudo apt install -f -y
-
-# Install Flatpak and Flathub repository
-echo "Setting up Flatpak..."
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
-echo "Installing Flatpak apps..."
-flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop io.missioncenter.MissionCenter
-flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
-
-# Set Dark Mode in GNOME
-echo "Configuring GNOME theme..."
+### Konfigurera GNOME ###
+echo "Konfigurerar GNOME-tema och favoritappar..."
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+# Lägg till favoritappar om de inte redan finns
+current_favs=$(gsettings get org.gnome.shell favorite-apps)
+for app in 'google-chrome.desktop' 'com.spotify.Client.desktop' 'gns3.desktop'; do
+    if [[ ! $current_favs =~ $app ]]; then
+        gsettings set org.gnome.shell favorite-apps "$(echo $current_favs | sed "s/]$/, '$app']/")"
+    fi
+done
+# Ta bort oönskade appar från favoriter
+for app in 'firefox_firefox.desktop' 'libreoffice-writer.desktop' 'snap-store_snap-store.desktop' 'thunderbird_thunderbird.desktop' 'yelp.desktop' 'org.gnome.Rhythmbox3.desktop'; do
+    gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, '$app'//" | sed "s/'$app', //")"
+done
 
-# Pin favorite apps to the Ubuntu sidebar
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'google-chrome.desktop']/")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'com.spotify.Client.desktop']/")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'gns3.desktop']/")"
+### Ta bort oönskade appar ###
+if confirm "Vill du ta bort Thunderbird, Firefox och LibreOffice?"; then
+    sudo snap remove thunderbird firefox || echo "Varning: Kunde inte ta bort snap-paket"
+    sudo apt remove --purge -y libreoffice* || echo "Varning: Kunde inte ta bort LibreOffice"
+    sudo apt autoremove -y || echo "Varning: Kunde inte köra autoremove"
+fi
 
-# Unpin favorite apps from the Ubuntu sidebar
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'firefox_firefox.desktop'//" | sed "s/'firefox_firefox.desktop', //")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'libreoffice-writer.desktop'//" | sed "s/'libreoffice-writer.desktop', //")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'snap-store_snap-store.desktop'//" | sed "s/'snap-store_snap-store.desktop', //")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'thunderbird_thunderbird.desktop'//" | sed "s/'thunderbird_thunderbird.desktop', //")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'yelp.desktop'//" | sed "s/'yelp.desktop', //")"
-gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/, 'org.gnome.Rhythmbox3.desktop'//" | sed "s/'org.gnome.Rhythmbox3.desktop', //")"
+### Klona och distribuera konfigurationsfiler ###
+echo "Klonar konfigurationsrepository och distribuerar filer..."
+git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu || error_exit "Kunde inte klona Ubuntu-repo"
+git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers || error_exit "Kunde inte klona Wallpapers-repo"
+sudo mkdir -p /usr/local/bin || error_exit "Kunde inte skapa /usr/local/bin"
+sudo cp -f /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/ || error_exit "Kunde inte kopiera change_wallpaper.sh"
+mkdir -p "$HOME/.config" || error_exit "Kunde inte skapa .config-mappen"
+cp -r /tmp/Ubuntu/home/.config/* "$HOME/.config/" || error_exit "Kunde inte kopiera .config-filer"
+cp -f /tmp/Ubuntu/home/.vimrc "$HOME/" || error_exit "Kunde inte kopiera .vimrc"
 
-# Remove apps I don't need
-sudo snap remove thunderbird firefox
-sudo apt remove --purge libreoffice* -y
-sudo apt autoremove -y
+### Aktivera brandvägg och Fail2Ban ###
+echo "Aktiverar brandvägg och Fail2Ban..."
+sudo ufw enable || error_exit "Kunde inte aktivera UFW"
+sudo ufw default deny incoming || error_exit "Kunde inte ställa in UFW-regler"
+sudo ufw default allow outgoing || error_exit "Kunde inte ställa in UFW-regler"
+sudo systemctl enable fail2ban || error_exit "Kunde inte aktivera Fail2Ban"
 
-# Clone your Ubuntu repo
-echo "Cloning configuration repository..."
-git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu
-git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers
-sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/
-
-# Copy configuration files
-echo "Deploying user configurations..."
-sudo mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
-sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
-
-# Enable firewall + Fail2Ban
-sudo ufw enable
-sudo ufw default deny incoming
-sudo ufw default allow outgoin
-sudo systemctl enable fail2ban
-
-# Add custom configuration to .bashrc
-git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
+### Konfigurera .bashrc ###
+echo "Konfigurerar .bashrc med anpassningar..."
+git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash || error_exit "Kunde inte klona mybash"
 chmod +x ~/mybash/setup.sh
-~/mybash/setup.sh
-git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
-make -C ble.sh install PREFIX=~/.local
+~/mybash/setup.sh || error_exit "Kunde inte köra mybash setup"
+git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git || error_exit "Kunde inte klona ble.sh"
+make -C ble.sh install PREFIX=~/.local || error_exit "Kunde inte installera ble.sh"
 echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
-cat << EOF >> ~/.bashrc
+cat << 'EOF' >> ~/.bashrc
 alias qdirstat='nohup sudo -E qdirstat'
 export QT_QPA_PLATFORMTHEME=qt5ct
 alias edit='nvim'
@@ -124,64 +130,67 @@ alias ?='tldr'
 alias explain='tldr'
 alias ~='cd $HOME'
 alias -- -="cd -"
-# Alias's for multiple directory listing commands
-alias la='lsd -Alh'                # show hidden files
-alias ls='lsd -aFh --color=always' # add colors and file type extension
-alias lx='lsd -lXBh'               # sort by extension
-alias lk='lsd -lSrh'               # sort by size
-alias lc='lsd -ltcrh'              # sort by change time
-alias lu='lsd -lturh'              # sort by access time
-alias lr='lsd -lRh'                # recursive ls
-alias lt='lsd -ltrh'               # sort by date
-alias lm='lsd -alh |more'          # pipe through 'more'
-alias lw='lsd -xAh'                # wide listing format
-alias ll='lsd -Fl'                 # long listing format
-alias labc='lsd -lap'              # alphabetical sort
-alias lf="lsd -l | egrep -v '^d'"  # files only
-alias ldir="lsd -l | egrep '^d'"   # directories only
-alias lla='lsd -Al'                # List and Hidden Files
-alias las='lsd -A'                 # Hidden Files
-alias lls='lsd -l'                 # List
+alias la='lsd -Alh'
+alias ls='lsd -aFh --color=always'
+alias lx='lsd -lXBh'
+alias lk='lsd -lSrh'
+alias lc='lsd -ltcrh'
+alias lu='lsd -lturh'
+alias lr='lsd -lRh'
+alias lt='lsd -ltrh'
+alias lm='lsd -alh |more'
+alias lw='lsd -xAh'
+alias ll='lsd -Fl'
+alias labc='lsd -lap'
+alias lf="lsd -l | egrep -v '^d'"
+alias ldir="lsd -l | egrep '^d'"
+alias lla='lsd -Al'
+alias las='lsd -A'
+alias lls='lsd -l'
 EOF
 
-# Set catppuccin mocha theme
-## gnome-terminal
-curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/install.py | python3 -
+### Sätt Catppuccin Mocha-tema ###
+echo "Sätter upp Catppuccin Mocha-tema..."
+
+# gnome-terminal
+curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/install.py | python3 - || echo "Varning: Kunde inte sätta terminaltema"
 gsettings set org.gnome.Terminal.ProfilesList default '95894cfd-82f7-430d-af6e-84d168bc34f5'
 gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
-## batcat
-mkdir -p "$(batcat --config-dir)/themes"
-wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
-wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
-wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
-batcat cache --build
-## Papirus icons
-git clone https://github.com/catppuccin/papirus-folders.git
+
+# bat
+mkdir -p "$(bat --config-dir)/themes" || error_exit "Kunde inte skapa bat-themes-mapp"
+wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme || echo "Varning: Kunde inte ladda ner bat-tema"
+bat cache --build || echo "Varning: Kunde inte bygga bat-cache"
+
+# Papirus-ikoner
+git clone https://github.com/catppuccin/papirus-folders.git || error_exit "Kunde inte klona papirus-folders"
 cd papirus-folders
-sudo cp -r src/* /usr/share/icons/Papirus
+sudo cp -r src/* /usr/share/icons/Papirus || error_exit "Kunde inte kopiera Papirus-filer"
 curl -LO https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders && chmod +x ./papirus-folders
-./papirus-folders -C cat-mocha-lavender --theme Papirus-Dark
+./papirus-folders -C cat-mocha-lavender --theme Papirus-Dark || echo "Varning: Kunde inte sätta Papirus-tema"
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-## GTK 3/4 theming
-cd $HOME
-curl -LsSO "https://raw.githubusercontent.com/catppuccin/gtk/v1.0.3/install.py"
-python3 install.py mocha lavender
+cd ..
+
+# GTK-tema
+curl -LsSO "https://raw.githubusercontent.com/catppuccin/gtk/v1.0.3/install.py" || error_exit "Kunde inte ladda ner GTK-tema-skript"
+python3 install.py mocha lavender || error_exit "Kunde inte installera GTK-tema"
 gsettings set org.gnome.desktop.interface gtk-theme 'catppuccin-mocha-lavender-standard+default'
 
-# Reload .bashrc
+### Rensa upp ###
+echo "Rensar upp temporära filer..."
+rm -rf /tmp/Ubuntu papirus-folders install.py || echo "Varning: Kunde inte rensa alla temporära filer"
+rm -f /tmp/google-chrome.deb /tmp/teamviewer.deb
+
+### Lägg till användaren i nödvändiga grupper ###
+echo "Lägger till $USER i nödvändiga grupper..."
+sudo usermod -aG ubridge,libvirt,kvm,wireshark "$USER" || error_exit "Kunde inte lägga till användaren i grupper"
+
+### Ladda om .bashrc ###
 source ~/.bashrc
 
-# Clean up
-echo "Removing cloned repository..."
-rm -rf /tmp/Ubuntu
-
-echo "Cleaning up downloaded .deb files..."
-rm /tmp/google-chrome.deb /tmp/teamviewer.deb 
-
-# Add user to required groups
-echo "Adding $USER to required groups..."
-sudo usermod -aG ubridge,libvirt,kvm,wireshark $(whoami)
-
-echo "Post-installation setup complete!"
-reboot
+echo "Post-installationen är klar!"
+if confirm "Vill du starta om systemet nu?"; then
+    reboot
+else
+    echo "Starta om manuellt senare med 'reboot' för att tillämpa alla ändringar."
+fi
