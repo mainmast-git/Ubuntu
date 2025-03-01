@@ -24,7 +24,7 @@ sudo apt install -y \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
     make gawk trash-cli fzf bash-completion whois bat tree \
-    ripgrep gnome-tweaks plocate
+    ripgrep gnome-tweaks plocate fail2ban
 
 # Add Paprius PPA
 sudo add-apt-repository ppa:papirus/papirus
@@ -89,6 +89,12 @@ sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/
 echo "Deploying user configurations..."
 sudo mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
 sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
+
+# Enable firewall + Fail2Ban
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoin
+sudo systemctl enable fail2ban
 
 # Add custom configuration to .bashrc
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
