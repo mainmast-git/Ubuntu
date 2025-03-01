@@ -87,8 +87,8 @@ sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/
 
 # Copy configuration files
 echo "Deploying user configurations..."
-mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
-mv -f /tmp/Ubuntu/home/.vimrc $HOME/
+sudo mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
+sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
 
 # Add custom configuration to .bashrc
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
