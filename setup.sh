@@ -93,7 +93,7 @@ sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
 # Enable firewall + Fail2Ban
 sudo ufw enable
 sudo ufw default deny incoming
-sudo ufw default allow outgoin
+sudo ufw default allow outgoing
 sudo systemctl enable fail2ban
 
 # Add custom configuration to .bashrc
