@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=bluetoothctl connect 10:94:97:3B:96:05
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[sv_SE]=Auto connect speaker
+Name=Auto connect speaker
+Comment[sv_SE]=Logi Z207
+Comment=Logi Z207
