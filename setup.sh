@@ -31,7 +31,7 @@ install_apt_packages() {
         qt5-style-kvantum qt5-style-kvantum-themes gns3-gui gns3-server libminizip1 \
         libxcb-xinerama0 tldr fastfetch lsd make gawk trash-cli fzf bash-completion \
         whois bat tree ripgrep gnome-tweaks plocate fail2ban papirus-icon-theme \
-        epapirus-icon-theme || { echo "Package installation failed"; exit 1; }
+        epapirus-icon-theme gnome-weather || { echo "Package installation failed"; exit 1; }
     clear
 }
 
