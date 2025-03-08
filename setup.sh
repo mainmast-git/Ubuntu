@@ -1,44 +1,44 @@
 #!/bin/bash
 
 echo "Starting Ubuntu Post-Installation Setup..."
-sleep 10
+sleep 5
 
 # Function to update and upgrade system
 update_system() {
     echo "Updating and upgrading the system..."
-    sleep 10
-    sudo apt update -y && sudo apt upgrade -y
+    sleep 5
+    sudo apt update -y && sudo apt upgrade -y || { echo "System update failed"; exit 1; }
     clear
 }
 
 # Function to add PPAs
 add_ppas() {
     echo "Adding PPAs..."
-    sleep 10
+    sleep 5
     sudo add-apt-repository -y ppa:gns3/ppa
     sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
     sudo add-apt-repository -y ppa:papirus/papirus
-    sudo apt update -y
+    sudo apt update -y || { echo "PPA update failed"; exit 1; }
     clear
 }
 
 # Function to install APT packages
 install_apt_packages() {
     echo "Installing required packages..."
-    sleep 10
+    sleep 5
     sudo apt install -y vim curl git qemu-kvm libvirt-daemon-system libvirt-clients \
         bridge-utils virt-manager flatpak timeshift neovim qdirstat qt5ct \
         qt5-style-kvantum qt5-style-kvantum-themes gns3-gui gns3-server libminizip1 \
         libxcb-xinerama0 tldr fastfetch lsd make gawk trash-cli fzf bash-completion \
         whois bat tree ripgrep gnome-tweaks plocate fail2ban papirus-icon-theme \
-        epapirus-icon-theme
+        epapirus-icon-theme || { echo "Package installation failed"; exit 1; }
     clear
 }
 
 # Function to setup QT5 theme
 setup_qt5_theme() {
     echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
-    sleep 10
+    sleep 5
     qt5ct
     sudo qt5ct
     clear
@@ -46,41 +46,40 @@ setup_qt5_theme() {
 
 # Function to add i386 architecture and install GNS3 IOU
 install_gns3_iou() {
-    echo "Adding i386 architecture and updating packages..."
-    sleep 10
+    echo "Adding i386 architecture and installing GNS3 IOU..."
+    sleep 5
     sudo dpkg --add-architecture i386
     sudo apt update -y
-    sudo apt install -y gns3-iou
+    sudo apt install -y gns3-iou || { echo "GNS3 IOU installation failed"; exit 1; }
     clear
 }
 
 # Function to install .deb packages
 install_deb_packages() {
     echo "Downloading and installing Google Chrome & TeamViewer..."
-    sleep 10
-    wget -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    wget -O /tmp/teamviewer.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-    sudo dpkg -i /tmp/google-chrome.deb /tmp/teamviewer.deb || sudo apt install -f -y
+    sleep 5
+    wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    wget -q -O /tmp/teamviewer.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+    sudo dpkg -i /tmp/google-chrome.deb /tmp/teamviewer.deb || sudo apt install -f -y || { echo "DEB package installation failed"; exit 1; }
     clear
 }
 
 # Function to setup Flatpak
 setup_flatpak() {
-    echo "Setting up Flatpak..."
-    sleep 10
+    echo "Setting up Flatpak and installing apps..."
+    sleep 5
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    echo "Installing Flatpak apps..."
     flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client \
         io.github.shiftey.Desktop io.missioncenter.MissionCenter com.obsproject.Studio \
-        com.obsproject.Studio.Plugin.DroidCam
-    flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
+        com.obsproject.Studio.Plugin.DroidCam || { echo "Flatpak app installation failed"; exit 1; }
+    flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref || { echo "Sober Flatpak installation failed"; exit 1; }
     clear
 }
 
 # Function to configure GNOME
 configure_gnome() {
     echo "Configuring GNOME theme..."
-    sleep 10
+    sleep 5
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'google-chrome.desktop']/")"
     gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/]$/, 'com.spotify.Client.desktop']/")"
@@ -97,46 +96,46 @@ configure_gnome() {
 # Function to remove unwanted apps
 remove_unwanted_apps() {
     echo "Removing unwanted apps..."
-    sleep 10
-    sudo snap remove thunderbird firefox
+    sleep 5
+    sudo snap remove thunderbird firefox || echo "Some snaps were not installed, continuing..."
     sudo apt autoremove -y
     clear
 }
 
 # Function to clone repositories
 clone_repositories() {
-    echo "Cloning configuration repository..."
-    sleep 10
-    git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu
-    git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers
-    sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/
+    echo "Cloning configuration repositories..."
+    sleep 5
+    git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu || { echo "Failed to clone Ubuntu repo"; exit 1; }
+    git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers || { echo "Failed to clone Wallpapers repo"; exit 1; }
+    sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/ || { echo "Failed to move change_wallpaper.sh"; exit 1; }
     clear
 }
 
 # Function to copy configuration files
 copy_config_files() {
     echo "Deploying user configurations..."
-    sleep 10
-    sudo mv -f /tmp/Ubuntu/home/.config/* $HOME/.config/
-    sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
+    sleep 5
+    sudo mv -f /tmp/Ubuntu/home/.config/* "$HOME/.config/" || { echo "Failed to move config files"; exit 1; }
+    sudo mv -f /tmp/Ubuntu/home/.vimrc "$HOME/" || { echo "Failed to move .vimrc"; exit 1; }
     clear
 }
 
 # Function to enable firewall and Fail2Ban
 enable_firewall_fail2ban() {
     echo "Enabling firewall and Fail2Ban..."
-    sleep 10
+    sleep 5
     sudo ufw enable
     sudo ufw default deny incoming
     sudo ufw default allow outgoing
-    sudo systemctl enable --now fail2ban
+    sudo systemctl enable --now fail2ban || { echo "Failed to enable Fail2Ban"; exit 1; }
     clear
 }
 
 # Function to add custom configurations to .bashrc
 add_custom_bashrc() {
     echo "Adding custom configurations to .bashrc..."
-    sleep 10
+    sleep 5
     git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
     chmod +x ~/mybash/setup.sh
     ~/mybash/setup.sh
@@ -192,7 +191,7 @@ EOF
 # Function to set the theme
 set_theme() {
     echo "Setting catppuccin mocha theme..."
-    sleep 10
+    sleep 5
     # gnome-terminal
     curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/install.py | python3 -
     gsettings set org.gnome.Terminal.ProfilesList default '95894cfd-82f7-430d-af6e-84d168bc34f5'
@@ -219,30 +218,26 @@ set_theme() {
     clear
 }
 
-# Reload .bashrc
-source ~/.bashrc
-
 # Function to clean up
 clean_up() {
     echo "Cleaning up..."
-    sleep 10
-    rm -rf /tmp/Ubuntu
-    rm /tmp/google-chrome.deb /tmp/teamviewer.deb
+    sleep 5
+    rm -rf /tmp/Ubuntu /tmp/google-chrome.deb /tmp/teamviewer.deb
     clear
 }
 
 # Function to add user to required groups
 add_user_to_groups() {
     echo "Adding $USER to required groups..."
-    sleep 10
-    sudo usermod -aG ubridge,libvirt,kvm,wireshark $(whoami)
+    sleep 5
+    sudo usermod -aG ubridge,libvirt,kvm,wireshark $(whoami) || { echo "Failed to add user to groups"; exit 1; }
     clear
 }
 
 # Function to reboot system
 reboot_system() {
     echo "Post-installation setup complete!"
-    sleep 10
+    sleep 5
     reboot
 }
 
@@ -261,6 +256,7 @@ copy_config_files
 enable_firewall_fail2ban
 add_custom_bashrc
 set_theme
+source ~/.bashrc
 clean_up
 add_user_to_groups
 reboot_system
