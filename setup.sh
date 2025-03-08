@@ -11,9 +11,10 @@ echo "Adding GNS3 PPA..."
 sudo add-apt-repository -y ppa:gns3/ppa
 sudo apt update -y
 
-# Add fastfetch PPA needed for CTT "mybash"
+# Add PPAs needed for fastfetch and papirus-theme
 echo "Adding fastfetch PPA..."
 sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
+sudo add-apt-repository ppa:papirus/papirus
 sudo apt update -y
 
 # Install APT Packages
@@ -24,13 +25,8 @@ sudo apt install -y \
     qt5ct qt5-style-kvantum qt5-style-kvantum-themes gns3-gui \
     gns3-server libminizip1 libxcb-xinerama0 tldr fastfetch lsd \
     make gawk trash-cli fzf bash-completion whois bat tree \
-    ripgrep gnome-tweaks plocate fail2ban
-
-# Add Paprius PPA
-sudo add-apt-repository ppa:papirus/papirus
-sudo apt-get update -y
-sudo apt-get install -y papirus-icon-theme  # Papirus, Papirus-Dark, and Papirus-Light
-sudo apt-get install -y epapirus-icon-theme # ePapirus, and ePapirus-Dark for elementaryOS only
+    ripgrep gnome-tweaks plocate fail2ban papirus-icon-theme \
+    epapirus-icon-theme
 
 # Setup qt5ct theme for KDE applications
 echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
@@ -54,7 +50,11 @@ echo "Setting up Flatpak..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo "Installing Flatpak apps..."
-flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client io.github.shiftey.Desktop io.missioncenter.MissionCenter
+flatpak install -y flathub \
+com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client \
+io.github.shiftey.Desktop io.missioncenter.MissionCenter \
+com.obsproject.Studio com.obsproject.Studio.Plugin.DroidCam
+
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
 
 # Set Dark Mode in GNOME
@@ -76,7 +76,6 @@ gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell fav
 
 # Remove apps I don't need
 sudo snap remove thunderbird firefox
-sudo apt remove --purge libreoffice* -y
 sudo apt autoremove -y
 
 # Clone your Ubuntu repo
@@ -94,7 +93,7 @@ sudo mv -f /tmp/Ubuntu/home/.vimrc $HOME/
 sudo ufw enable
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo systemctl enable fail2ban
+sudo systemctl enable --now fail2ban
 
 # Add custom configuration to .bashrc
 git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
@@ -142,6 +141,9 @@ alias ldir="lsd -l | egrep '^d'"   # directories only
 alias lla='lsd -Al'                # List and Hidden Files
 alias las='lsd -A'                 # Hidden Files
 alias lls='lsd -l'                 # List
+alias serial-number='sudo dmidecode -s system-serial-number'
+alias bios-version='sudo dmidecode -s bios-version'
+alias uefi='sudo systemctl reboot --firmware-setup'
 EOF
 
 # Set catppuccin mocha theme
@@ -184,4 +186,5 @@ echo "Adding $USER to required groups..."
 sudo usermod -aG ubridge,libvirt,kvm,wireshark $(whoami)
 
 echo "Post-installation setup complete!"
+sleep 5
 reboot
