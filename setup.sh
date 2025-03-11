@@ -184,6 +184,8 @@ alias lls='lsd -l'                 # List
 alias serial-number='sudo dmidecode -s system-serial-number'
 alias bios-version='sudo dmidecode -s bios-version'
 alias uefi='sudo systemctl reboot --firmware-setup'
+alias enable-dock='gnome-extensions enable ubuntu-dock@ubuntu.com'
+alias disable-dock='gnome-extensions disable ubuntu-dock@ubuntu.com'
 EOF
     clear
 }
