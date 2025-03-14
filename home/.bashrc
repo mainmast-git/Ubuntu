@@ -1,0 +1,43 @@
+alias qdirstat='nohup sudo -E qdirstat'
+export QT_QPA_PLATFORMTHEME=qt5ct
+alias edit='nvim'
+alias sedit='sudo nvim'
+alias clear='clear; fastfetch'
+alias cls='clear'
+bind -x '"\C-l": clear'
+alias update='sudo apt update -y; sudo apt upgrade -y; flatpak update -y; sudo snap refresh'
+alias install='sudo apt install -y'
+alias search='apt search'
+alias uninstall='sudo apt remove -y'
+alias clean='sudo apt autoremove -y && sudo apt autoclean -y'
+alias packages='apt list --installed'
+alias ping='ping -c 4'
+alias ip='ip -c'
+alias vi='\vi'
+alias ?='tldr'
+alias explain='tldr'
+alias ~='cd $HOME'
+alias -- -="cd -"
+# Alias's for multiple directory listing commands
+alias la='lsd -Alh'                # show hidden files
+alias ls='lsd -aFh --color=always' # add colors and file type extension
+alias lx='lsd -lXBh'               # sort by extension
+alias lk='lsd -lSrh'               # sort by size
+alias lc='lsd -ltcrh'              # sort by change time
+alias lu='lsd -lturh'              # sort by access time
+alias lr='lsd -lRh'                # recursive ls
+alias lt='lsd -ltrh'               # sort by date
+alias lm='lsd -alh |more'          # pipe through 'more'
+alias lw='lsd -xAh'                # wide listing format
+alias ll='lsd -Fl'                 # long listing format
+alias labc='lsd -lap'              # alphabetical sort
+alias lf="lsd -l | egrep -v '^d'"  # files only
+alias ldir="lsd -l | egrep '^d'"   # directories only
+alias lla='lsd -Al'                # List and Hidden Files
+alias las='lsd -A'                 # Hidden Files
+alias lls='lsd -l'                 # List
+alias serial-number='sudo dmidecode -s system-serial-number'
+alias bios-version='sudo dmidecode -s bios-version'
+alias uefi='sudo systemctl reboot --firmware-setup'
+alias enable-dock='gnome-extensions enable ubuntu-dock@ubuntu.com'
+alias disable-dock='gnome-extensions disable ubuntu-dock@ubuntu.com'
