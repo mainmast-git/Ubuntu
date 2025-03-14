@@ -1,7 +1,14 @@
 #!/bin/bash
 
 echo "Starting Ubuntu Post-Installation Setup..."
-sleep 5
+
+# Check if the script is run as root
+check_user() {
+    if [ "$EUID" -eq 0 ]; then
+      echo "This script must not be run as root. Please run it as a regular user."
+      exit 1
+    fi
+}
 
 # Function to update and upgrade system
 update_system() {
@@ -245,6 +252,7 @@ reboot_system() {
 }
 
 # Main execution flow
+check_user
 update_system
 add_ppas
 install_apt_packages
