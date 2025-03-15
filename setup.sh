@@ -178,12 +178,31 @@ set_theme() {
     clear
 }
 
-setup_custom_keybinds() {
-    # Mission Center (ctrl + shift + esc)
+setup_custom_keyboard_shortcuts() {
+    # Custom Keyboard Shortcuts -> Mission Center (ctrl + shift + esc)
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom0/']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ name 'Aktivitetshanteraren'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ command 'flatpak run io.missioncenter.MissionCenter'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ binding '<Control><Shift>Escape'
+
+    # Pre-defined Keyboard Shortcuts
+    gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']" # Open default browser (super + w)
+    gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Super>t']" # Open gnome-terminal (super + t)
+    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>a']" # Toggle message tray (super + a)
+    gsettings set org.gnome.shell.keybindings toggle-quick-settings "['<Super>x']" # Toggle quick settings (super + x)
+    gsettings set org.gnome.desktop.wm.keybindings panel-run-dialog "['<Super>r']" # Run dialog (super + r)
+    gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>i']" # Open settings (super + i)
+    gsettings set org.gnome.desktop.wm.keybindings close "['<Super>q']" # Close programs (super + q)
+    
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>1']" # Switch to workspace 1 (super + 1)
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Super>2']" # Switch to workspace 2 (super + 2)
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Super>3']" # Switch to workspace 3 (super + 3)
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Super>4']" # Switch to workspace 4 (super + 4)
+    
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Shift><Super>1']" # Move window and switch to workspace 1 (super + shift + 1)
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>2']" # Move window and switch to workspace 2 (super + shift + 2)
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>3']" # Move window and switch to workspace 3 (super + shift + 3)
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Shift><Super>4']" # Move window and switch to workspace 4 (super + shift + 4)
 }
 
 # Function to clean up
@@ -226,6 +245,7 @@ enable_firewall_fail2ban
 add_custom_bashrc
 set_theme
 source ~/.bashrc
+setup_custom_keyboard_shortcuts
 clean_up
 add_user_to_groups
 reboot_system
