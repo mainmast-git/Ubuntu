@@ -12,6 +12,7 @@ check_user() {
 
 # Function to update and upgrade system
 update_system() {
+    git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu || { echo "Failed to clone Ubuntu repo"; exit 1; }
     echo "Updating and upgrading the system..."
     sleep 5
     sudo apt update -y && sudo apt upgrade -y || { echo "System update failed"; exit 1; }
@@ -33,12 +34,7 @@ add_ppas() {
 install_apt_packages() {
     echo "Installing required packages..."
     sleep 5
-    sudo apt install -y vim curl git qemu-kvm libvirt-daemon-system libvirt-clients \
-        bridge-utils virt-manager flatpak timeshift neovim qdirstat qt5ct \
-        qt5-style-kvantum qt5-style-kvantum-themes gns3-gui gns3-server libminizip1 \
-        libxcb-xinerama0 tldr fastfetch lsd make gawk trash-cli fzf bash-completion \
-        whois bat tree ripgrep gnome-tweaks plocate fail2ban papirus-icon-theme \
-        epapirus-icon-theme gnome-weather || { echo "Package installation failed"; exit 1; }
+    xargs -a /tmp/Ubuntu/packages/apt sudo apt install -y || { echo "APT package installation failed"; exit 1; } # Install apt packages
     clear
 }
 
@@ -65,9 +61,10 @@ install_gns3_iou() {
 install_deb_packages() {
     echo "Downloading and installing Google Chrome & TeamViewer..."
     sleep 5
-    wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    wget -q -O /tmp/teamviewer.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-    sudo dpkg -i /tmp/google-chrome.deb /tmp/teamviewer.deb || sudo apt install -f -y || { echo "DEB package installation failed"; exit 1; }
+    while read -r url; do
+        wget -q -O /tmp/$(basename "$url") "$url" # Install deb packages
+        sudo dpkg -i /tmp/$(basename "$url") || sudo apt install -f -y || { echo "DEB package installation failed"; exit 1; }
+    done < /tmp/Ubuntu/packages/deb
     clear
 }
 
@@ -76,9 +73,7 @@ setup_flatpak() {
     echo "Setting up Flatpak and installing apps..."
     sleep 5
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install -y flathub com.rustdesk.RustDesk com.usebottles.bottles com.spotify.Client \
-        io.github.shiftey.Desktop io.missioncenter.MissionCenter com.obsproject.Studio \
-        com.obsproject.Studio.Plugin.DroidCam || { echo "Flatpak app installation failed"; exit 1; }
+    xargs -a /tmp/Ubuntu/packages/flatpak flatpak install -y flathub || { echo "Flatpak app installation failed"; exit 1; } # Install flatpaks
     flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref || { echo "Sober Flatpak installation failed"; exit 1; }
     clear
 }
@@ -114,7 +109,6 @@ remove_unwanted_apps() {
 clone_repositories() {
     echo "Cloning configuration repositories..."
     sleep 5
-    git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu || { echo "Failed to clone Ubuntu repo"; exit 1; }
     git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers || { echo "Failed to clone Wallpapers repo"; exit 1; }
     sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/ || { echo "Failed to move change_wallpaper.sh"; exit 1; }
     clear
@@ -150,51 +144,7 @@ add_custom_bashrc() {
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
     make -C ble.sh install PREFIX=~/.local
     echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
-    cat << EOF >> ~/.bashrc
-alias qdirstat='nohup sudo -E qdirstat'
-export QT_QPA_PLATFORMTHEME=qt5ct
-alias edit='nvim'
-alias sedit='sudo nvim'
-alias clear='clear; fastfetch'
-alias cls='clear'
-bind -x '"\C-l": clear'
-alias update='sudo apt update -y; sudo apt upgrade -y; flatpak update -y; sudo snap refresh'
-alias install='sudo apt install -y'
-alias search='apt search'
-alias uninstall='sudo apt remove -y'
-alias clean='sudo apt autoremove -y && sudo apt autoclean -y'
-alias packages='apt list --installed'
-alias ping='ping -c 4'
-alias ip='ip -c'
-alias vi='\vi'
-alias ?='tldr'
-alias explain='tldr'
-alias ~='cd $HOME'
-alias -- -="cd -"
-# Alias's for multiple directory listing commands
-alias la='lsd -Alh'                # show hidden files
-alias ls='lsd -aFh --color=always' # add colors and file type extension
-alias lx='lsd -lXBh'               # sort by extension
-alias lk='lsd -lSrh'               # sort by size
-alias lc='lsd -ltcrh'              # sort by change time
-alias lu='lsd -lturh'              # sort by access time
-alias lr='lsd -lRh'                # recursive ls
-alias lt='lsd -ltrh'               # sort by date
-alias lm='lsd -alh |more'          # pipe through 'more'
-alias lw='lsd -xAh'                # wide listing format
-alias ll='lsd -Fl'                 # long listing format
-alias labc='lsd -lap'              # alphabetical sort
-alias lf="lsd -l | egrep -v '^d'"  # files only
-alias ldir="lsd -l | egrep '^d'"   # directories only
-alias lla='lsd -Al'                # List and Hidden Files
-alias las='lsd -A'                 # Hidden Files
-alias lls='lsd -l'                 # List
-alias serial-number='sudo dmidecode -s system-serial-number'
-alias bios-version='sudo dmidecode -s bios-version'
-alias uefi='sudo systemctl reboot --firmware-setup'
-alias enable-dock='gnome-extensions enable ubuntu-dock@ubuntu.com'
-alias disable-dock='gnome-extensions disable ubuntu-dock@ubuntu.com'
-EOF
+    cat /tmp/Ubuntu/home/.bashrc >> ~/.bashrc
     clear
 }
 
