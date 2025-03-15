@@ -179,6 +179,7 @@ set_theme() {
 }
 
 setup_custom_keyboard_shortcuts() {
+    echo "Setting up keyboard shortcuts..."
     # Custom Keyboard Shortcuts -> Mission Center (ctrl + shift + esc)
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom0/']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ name 'Aktivitetshanteraren'
@@ -203,6 +204,7 @@ setup_custom_keyboard_shortcuts() {
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>2']" # Move window and switch to workspace 2 (super + shift + 2)
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>3']" # Move window and switch to workspace 3 (super + shift + 3)
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Shift><Super>4']" # Move window and switch to workspace 4 (super + shift + 4)
+    clear
 }
 
 # Function to clean up
