@@ -178,6 +178,14 @@ set_theme() {
     clear
 }
 
+setup_custom_keybinds() {
+    # Mission Center (ctrl + shift + esc)
+    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom0/']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ name 'Aktivitetshanteraren'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ command 'flatpak run io.missioncenter.MissionCenter'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ binding '<Control><Shift>Escape'
+}
+
 # Function to clean up
 clean_up() {
     echo "Cleaning up..."
