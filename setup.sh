@@ -180,6 +180,7 @@ set_theme() {
 
 setup_custom_keyboard_shortcuts() {
     echo "Setting up keyboard shortcuts..."
+    sleep 5
     # Custom Keyboard Shortcuts -> Mission Center (ctrl + shift + esc)
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom0/']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ name 'Aktivitetshanteraren'
