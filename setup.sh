@@ -190,6 +190,7 @@ setup_custom_keyboard_shortcuts() {
     # Pre-defined Keyboard Shortcuts
     gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']" # Open default browser (super + w)
     gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Super>t']" # Open gnome-terminal (super + t)
+    gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']" # Open default file manager (super + e)
     gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>a']" # Toggle message tray (super + a)
     gsettings set org.gnome.shell.keybindings toggle-quick-settings "['<Super>x']" # Toggle quick settings (super + x)
     gsettings set org.gnome.desktop.wm.keybindings panel-run-dialog "['<Super>r']" # Run dialog (super + r)
