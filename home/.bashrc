@@ -40,3 +40,5 @@ alias uefi='sudo systemctl reboot --firmware-setup'
 alias enable-dock='gnome-extensions enable ubuntu-dock@ubuntu.com'
 alias disable-dock='gnome-extensions disable ubuntu-dock@ubuntu.com'
 alias ipconfig='ip address'
+export EDITOR=vi
+export VISUAL=vi
