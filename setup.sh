@@ -24,8 +24,6 @@ add_ppas() {
     echo "Adding PPAs..."
     sleep 5
     sudo add-apt-repository -y ppa:gns3/ppa
-    sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
-    sudo add-apt-repository -y ppa:papirus/papirus
     sudo apt update -y || { echo "PPA update failed"; exit 1; }
     clear
 }
@@ -35,15 +33,6 @@ install_apt_packages() {
     echo "Installing required packages..."
     sleep 5
     xargs -a /tmp/Ubuntu/packages/apt sudo apt install -y || { echo "APT package installation failed"; exit 1; } # Install apt packages
-    clear
-}
-
-# Function to setup QT5 theme
-setup_qt5_theme() {
-    echo "Setting up theme (Fusion + GTK3 + darker) for KDE..."
-    sleep 5
-    qt5ct
-    sudo qt5ct
     clear
 }
 
@@ -100,17 +89,8 @@ configure_gnome() {
 remove_unwanted_apps() {
     echo "Removing unwanted apps..."
     sleep 5
-    sudo snap remove thunderbird firefox || echo "Some snaps were not installed, continuing..."
+    sudo snap remove thunderbird || echo "Some snaps were not installed, continuing..."
     sudo apt autoremove -y
-    clear
-}
-
-# Function to clone repositories
-clone_repositories() {
-    echo "Cloning configuration repositories..."
-    sleep 5
-    git clone https://github.com/orangci/walls-catppuccin-mocha.git ~/Wallpapers || { echo "Failed to clone Wallpapers repo"; exit 1; }
-    sudo mv /tmp/Ubuntu/usr/local/bin/change_wallpaper.sh /usr/local/bin/ || { echo "Failed to move change_wallpaper.sh"; exit 1; }
     clear
 }
 
@@ -150,31 +130,10 @@ add_custom_bashrc() {
 
 # Function to set the theme
 set_theme() {
-    echo "Setting catppuccin mocha theme..."
+    echo "Setting Desktop theme..."
     sleep 5
     # gnome-terminal
-    curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v1.0.0/install.py | python3 -
-    gsettings set org.gnome.Terminal.ProfilesList default '95894cfd-82f7-430d-af6e-84d168bc34f5'
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
-    # batcat
-    mkdir -p "$(batcat --config-dir)/themes"
-    wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-    wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
-    wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
-    wget -P "$(batcat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
-    batcat cache --build
-    # Papirus icons
-    git clone https://github.com/catppuccin/papirus-folders.git
-    cd papirus-folders
-    sudo cp -r src/* /usr/share/icons/Papirus
-    curl -LO https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders && chmod +x ./papirus-folders
-    ./papirus-folders -C cat-mocha-lavender --theme Papirus-Dark
-    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-    # GTK 3/4 theming
-    cd $HOME
-    curl -LsSO "https://raw.githubusercontent.com/catppuccin/gtk/v1.0.3/install.py"
-    python3 install.py mocha lavender
-    gsettings set org.gnome.desktop.interface gtk-theme 'catppuccin-mocha-lavender-standard+default'
     clear
 }
 
@@ -237,13 +196,11 @@ check_user
 update_system
 add_ppas
 install_apt_packages
-setup_qt5_theme
 install_gns3_iou
 install_deb_packages
 setup_flatpak
 configure_gnome
 remove_unwanted_apps
-clone_repositories
 copy_config_files
 enable_firewall_fail2ban
 add_custom_bashrc
