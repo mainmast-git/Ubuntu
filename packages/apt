@@ -8,17 +8,12 @@ libvirt-clients
 bridge-utils
 virt-manager
 flatpak
-timeshift
 qdirstat
-qt5ct
-qt5-style-kvantum
-qt5-style-kvantum-themes
 gns3-gui
 gns3-server
 libminizip1
 libxcb-xinerama0
 tldr
-fastfetch
 lsd
 make
 gawk
@@ -32,6 +27,4 @@ ripgrep
 gnome-tweaks
 plocate
 fail2ban
-papirus-icon-theme
-epapirus-icon-theme
 gnome-weather
