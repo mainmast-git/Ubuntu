@@ -134,6 +134,7 @@ set_theme() {
     sleep 5
     # gnome-terminal
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
+    sudo cp .vimrc /root/
     clear
 }
 
