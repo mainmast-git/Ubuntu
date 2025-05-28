@@ -1,8 +1,6 @@
-alias qdirstat='nohup sudo -E qdirstat'
-export QT_QPA_PLATFORMTHEME=qt5ct
-alias edit='nvim'
-alias sedit='sudo nvim'
-alias clear='clear; fastfetch'
+alias qdirstat='sudo qdirstat'
+alias edit='vi'
+alias sedit='sudo vi'
 alias cls='clear'
 bind -x '"\C-l": clear'
 alias update='sudo apt update -y; sudo apt upgrade -y; flatpak update -y; sudo snap refresh'
