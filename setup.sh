@@ -147,6 +147,12 @@ setup_custom_keyboard_shortcuts() {
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ command 'flatpak run io.missioncenter.MissionCenter'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom0/ binding '<Control><Shift>Escape'
 
+    # Custom Keyboard Shortcuts -> Spotify (Super + s)
+    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom0/','/org/gnome/settings-daemon/plugins/media-keys/custom1/']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom1/ name 'Spotify'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom1/ command 'flatpak run com.spotify.Client'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom1/ binding '<Super>s'
+
     # Pre-defined Keyboard Shortcuts
     gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']" # Open default browser (super + w)
     gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Super>t']" # Open gnome-terminal (super + t)
