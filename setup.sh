@@ -100,6 +100,7 @@ copy_config_files() {
     sleep 5
     sudo mv -f /tmp/Ubuntu/home/.config/* "$HOME/.config/" || { echo "Failed to move config files"; exit 1; }
     sudo mv -f /tmp/Ubuntu/home/.vimrc "$HOME/" || { echo "Failed to move .vimrc"; exit 1; }
+    sudo cp .vimrc "$HOME/.vimrc" /root/ || { echo "Failed to copy .vimrc to root"; exit 1; }
     clear
 }
 
@@ -132,9 +133,7 @@ add_custom_bashrc() {
 set_theme() {
     echo "Setting Desktop theme..."
     sleep 5
-    # gnome-terminal
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
-    sudo cp .vimrc /root/
     clear
 }
 
