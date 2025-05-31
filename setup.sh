@@ -12,7 +12,7 @@ check_user() {
 
 # Function to update and upgrade system
 update_system() {
-    git clone https://github.com/ramin-samadi/Ubuntu /tmp/Ubuntu || { echo "Failed to clone Ubuntu repo"; exit 1; }
+    git clone https://github.com/mainmast-git/Ubuntu /tmp/Ubuntu || { echo "Failed to clone Ubuntu repo"; exit 1; }
     echo "Updating and upgrading the system..."
     sleep 5
     sudo apt update -y && sudo apt upgrade -y || { echo "System update failed"; exit 1; }
