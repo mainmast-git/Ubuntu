@@ -11,8 +11,6 @@ flatpak
 qdirstat
 gns3-gui
 gns3-server
-libminizip1
-libxcb-xinerama0
 tldr
 lsd
 make
@@ -21,7 +19,6 @@ trash-cli
 fzf
 bash-completion
 whois
-bat
 tree
 ripgrep
 gnome-tweaks
