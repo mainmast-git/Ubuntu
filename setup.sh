@@ -63,7 +63,6 @@ setup_flatpak() {
     sleep 5
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     xargs -a /tmp/Ubuntu/packages/flatpak flatpak install -y flathub || { echo "Flatpak app installation failed"; exit 1; } # Install flatpaks
-    flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref || { echo "Sober Flatpak installation failed"; exit 1; }
     clear
 }
 
@@ -119,9 +118,6 @@ enable_firewall_fail2ban() {
 add_custom_bashrc() {
     echo "Adding custom configurations to .bashrc..."
     sleep 5
-    git clone --depth=1 https://github.com/ChrisTitusTech/mybash.git ~/mybash
-    chmod +x ~/mybash/setup.sh
-    ~/mybash/setup.sh
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
     make -C ble.sh install PREFIX=~/.local
     echo 'source ~/.local/share/blesh/ble.sh' >> ~/.bashrc
