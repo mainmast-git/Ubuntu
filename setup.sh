@@ -125,14 +125,6 @@ add_custom_bashrc() {
     clear
 }
 
-# Function to set the theme
-set_theme() {
-    echo "Setting Desktop theme..."
-    sleep 5
-    gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font 12'
-    clear
-}
-
 setup_custom_keyboard_shortcuts() {
     echo "Setting up keyboard shortcuts..."
     sleep 5
@@ -206,7 +198,6 @@ remove_unwanted_apps
 copy_config_files
 enable_firewall_fail2ban
 add_custom_bashrc
-set_theme
 source ~/.bashrc
 setup_custom_keyboard_shortcuts
 clean_up
