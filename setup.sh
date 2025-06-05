@@ -98,8 +98,8 @@ copy_config_files() {
     echo "Deploying user configurations..."
     sleep 5
     sudo mv -f /tmp/Ubuntu/home/.config/* "$HOME/.config/" || { echo "Failed to move config files"; exit 1; }
+    sudo cp /tmp/Ubuntu/home/.vimrc /root/ || { echo "Failed to copy .vimrc to root"; exit 1; }
     sudo mv -f /tmp/Ubuntu/home/.vimrc "$HOME/" || { echo "Failed to move .vimrc"; exit 1; }
-    sudo cp .vimrc "$HOME/.vimrc" /root/ || { echo "Failed to copy .vimrc to root"; exit 1; }
     clear
 }
 
