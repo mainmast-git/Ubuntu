@@ -114,6 +114,15 @@ enable_firewall_fail2ban() {
     clear
 }
 
+# Function to enable scheduled SSD trim
+enable_trim() {
+    echo "Enabling weekly SSD TRIM for consistent performance and longevity..."
+    sleep 5
+    # Enable and start fstrim.timer so the SSD knows which blocks are free
+    sudo systemctl enable --now fstrim.timer || { echo "Failed to enable fstrim.timer"; exit 1; }
+    clear
+}
+
 # Function to add custom configurations to .bashrc
 add_custom_bashrc() {
     echo "Adding custom configurations to .bashrc..."
@@ -197,6 +206,7 @@ configure_gnome
 remove_unwanted_apps
 copy_config_files
 enable_firewall_fail2ban
+enable_trim
 add_custom_bashrc
 source ~/.bashrc
 setup_custom_keyboard_shortcuts
