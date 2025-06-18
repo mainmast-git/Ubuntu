@@ -16,6 +16,7 @@ alias ?='tldr'
 alias explain='tldr'
 alias ~='cd $HOME'
 alias -- -="cd -"
+alias rm='trash -v'
 # Alias's for multiple directory listing commands
 alias la='lsd -Alh'                # show hidden files
 alias ls='lsd -aFh --color=always' # add colors and file type extension
