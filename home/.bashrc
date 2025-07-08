@@ -43,3 +43,4 @@ alias disable-dock='gnome-extensions disable ubuntu-dock@ubuntu.com'
 alias ipconfig='ip address'
 export EDITOR=vi
 export VISUAL=vi
+export MANPAGER='nvim +Man!'
