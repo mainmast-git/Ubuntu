@@ -187,6 +187,11 @@ add_user_to_groups() {
     clear
 }
 
+# Function to enable unattended daily security updates (Answer Yes)
+enable_daily_security_updates() {
+    sudo dpkg-reconfigure unattended-upgrades
+}
+
 # Function to reboot system
 reboot_system() {
     echo "Post-installation setup complete!"
@@ -212,4 +217,5 @@ source ~/.bashrc
 setup_custom_keyboard_shortcuts
 clean_up
 add_user_to_groups
+enable_daily_security_updates
 reboot_system
