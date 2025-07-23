@@ -189,7 +189,53 @@ add_user_to_groups() {
 
 # Function to enable unattended daily security updates (Answer Yes)
 enable_daily_security_updates() {
+    echo "Enabling daily security updates..."
+    sleep 5
     sudo dpkg-reconfigure unattended-upgrades
+    clear
+}
+
+# Function to enable weekly full updates for apt, flatpak and snap
+enable_weekly_full_updates() {
+    echo "Enabling weekly full updates on saturdays..."
+    sleep 5
+    sudo tee /usr/local/bin/weekly-update.sh > /dev/null << 'EOF'
+#!/usr/bin/env bash
+set -eux
+
+# Refresh APT, snap & flatpak
+sudo apt update -y
+sudo apt upgrade -y
+flatpak update -y
+sudo snap refresh
+EOF
+
+    sudo chmod +x /usr/local/bin/weekly-update.sh
+
+    sudo tee /etc/systemd/system/weekly-update.service > /dev/null << 'EOF'
+[Unit]
+Description=Weekly full system update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/weekly-update.sh
+EOF
+
+    sudo tee /etc/systemd/system/weekly-update.timer > /dev/null << 'EOF'
+[Unit]
+Description=Run weekly-update.service every Saturday (or at next boot)
+
+[Timer]
+OnCalendar=Sat
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable --now weekly-update.timer
+    clear
 }
 
 # Function to reboot system
@@ -218,4 +264,5 @@ setup_custom_keyboard_shortcuts
 clean_up
 add_user_to_groups
 enable_daily_security_updates
+enable_weekly_full_updates
 reboot_system
